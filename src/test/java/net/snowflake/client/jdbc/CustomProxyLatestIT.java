@@ -1,19 +1,5 @@
 package net.snowflake.client.jdbc;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.fail;
-import static net.snowflake.client.AbstractDriverIT.getFullPathFileInResource;
-import static net.snowflake.client.jdbc.SnowflakeDriverIT.findFile;
-import static net.snowflake.client.jdbc.SnowflakeUtil.systemGetProperty;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.sql.*;
-import java.util.Properties;
 import net.snowflake.client.category.TestCategoryOthers;
 import net.snowflake.client.core.HttpUtil;
 import net.snowflake.common.core.SqlState;
@@ -22,6 +8,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.sql.*;
+import java.util.Properties;
+
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.fail;
+import static net.snowflake.client.AbstractDriverIT.getFullPathFileInResource;
+import static net.snowflake.client.jdbc.SnowflakeDriverIT.findFile;
+import static net.snowflake.client.jdbc.SnowflakeUtil.systemGetProperty;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 // To run these tests, you must:
 // 1.) Start up a proxy connection. The simplest ways are via Squid or BurpSuite. Confluence doc on
@@ -154,12 +155,12 @@ public class CustomProxyLatestIT {
   @Ignore
   public void testNonProxyHostAltering() throws SQLException {
     Properties props = new Properties();
-    props.put("user", "USER");
-    props.put("password", "PASSWORD");
+    props.put("user", "mknister");
+    props.put("password", "Iwish2reportaburglary!");
     props.put("useProxy", true);
     props.put("proxyHost", "localhost");
     props.put("proxyPort", "8080");
-    props.put("nonProxyHosts", ".foo.com|.baz.com");
+    props.put("nonProxyHosts", "*.snowflakecomputing.com");
     // Set up the first connection and proxy
     Connection con1 =
         DriverManager.getConnection(

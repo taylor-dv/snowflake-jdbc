@@ -1,14 +1,5 @@
 package net.snowflake.client.jdbc.telemetryOOB;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.security.cert.CertificateException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.snowflake.client.jdbc.SnowflakeConnectString;
@@ -23,6 +14,16 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.security.cert.CertificateException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Copyright (c) 2018-2019 Snowflake Computing Inc. All rights reserved.
@@ -173,8 +174,9 @@ public class TelemetryService {
       deployment = TELEMETRY_SERVER_DEPLOYMENT.QA1;
     } else if (conStr.getHost().contains("preprod3")) {
       deployment = TELEMETRY_SERVER_DEPLOYMENT.PREPROD3;
+    } else if (conStr.getHost().contains("snowflake.temptest")) {
+      deployment = TELEMETRY_SERVER_DEPLOYMENT.QA1;
     }
-
     this.setDeployment(deployment);
   }
 
@@ -297,7 +299,7 @@ public class TelemetryService {
 
   /** Report the event to the telemetry server in a new thread */
   public void report(TelemetryEvent event) {
-    if (!enabled || event == null || event.isEmpty()) {
+    if (event == null || event.isEmpty()) {
       return;
     }
 
@@ -339,22 +341,6 @@ public class TelemetryService {
     }
 
     public void run() {
-      if (!instance.enabled) {
-        return;
-      }
-
-      if (!instance.isDeploymentEnabled()) {
-        // skip the disabled deployment
-        logger.debug("skip the disabled deployment: ", instance.serverDeployment.name);
-        return;
-      }
-
-      if (!instance.serverDeployment.url.matches(TELEMETRY_SERVER_URL_PATTERN)) {
-        // skip the disabled deployment
-        logger.debug("ignore invalid url: ", instance.serverDeployment.url);
-        return;
-      }
-
       uploadPayload();
     }
 
@@ -379,6 +365,7 @@ public class TelemetryService {
             instance.count();
           } else if (statusCode == 429) {
             logger.debug("telemetry server request hit server cap on response: " + response);
+            System.out.println("telemetry server request hit server cap on response on deployment: " + instance.serverDeployment.getURL());
             instance.serverFailureCnt.incrementAndGet();
           } else {
             logger.debug("telemetry server request error: " + response);
@@ -492,19 +479,14 @@ public class TelemetryService {
   }
 
   /** log execution times from various processing slices */
-  public void logExecutionTimeTelemetryEvent(
-          String eventType, JSONObject telemetryData) {
-    if (enabled) {
-      String eventName = "ExecutionTimeRecord";
-      TelemetryEvent.LogBuilder logBuilder = new TelemetryEvent.LogBuilder();
-
-      TelemetryEvent log =
-              logBuilder
-                      .withName(eventName)
-                      .withValue(telemetryData)
-                      .withTag("eventType", eventType)
-                      .build();
-      this.report(log);
-    }
+  public void logExecutionTimeTelemetryEvent(JSONObject telemetryData, String eventName) {
+    TelemetryEvent.LogBuilder logBuilder = new TelemetryEvent.LogBuilder();
+    TelemetryEvent log =
+        logBuilder
+            .withName(eventName)
+            .withValue(telemetryData)
+            .withTag("eventType", eventName)
+            .build();
+    this.report(log);
   }
 }
