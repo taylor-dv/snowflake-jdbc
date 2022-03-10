@@ -529,7 +529,7 @@ public class HttpUtil {
    * @param httpRequest HttpRequestBase
    * @param retryTimeout retry timeout
    * @param authTimeout authenticator specific timeout
-   * @param socketTimeout curl timeout (in ms)
+   * @param socketTimeout socket timeout (in ms)
    * @param connectTimeout connect timeout (ms)
    * @param retryCount retry count for the request
    * @param injectSocketTimeout injecting socket timeout
@@ -572,9 +572,9 @@ public class HttpUtil {
    * @param httpRequest HttpRequestBase
    * @param retryTimeout retry timeout
    * @param authTimeout authenticator specific timeout
-   * @param connectTimeout : connect timeout (ms)
-   * @param socketTimeout curl timeout (in ms)
-   * @param retryCount : retry count for the request
+   * @param socketTimeout socket timeout (in ms)
+   * @param connectTimeout connect timeout (ms)
+   * @param retryCount retry count for the request
    * @param ocspAndProxyKey OCSP mode and proxy settings for httpclient
    * @return response
    * @throws SnowflakeSQLException if Snowflake error occurs
@@ -609,9 +609,9 @@ public class HttpUtil {
    * @param httpRequest HttpRequestBase
    * @param retryTimeout retry timeout
    * @param authTimeout authenticator specific timeout
-   * @param socketTimeout curl timeout (in ms)
+   * @param socketTimeout socket timeout (in ms)
    * @param connectTimeout connect timeout (ms)
-   * @param retryCount : retry count for the request
+   * @param retryCount retry count for the request
    * @param httpClient client object used to communicate with other machine
    * @return response
    * @throws SnowflakeSQLException if Snowflake error occurs
@@ -648,7 +648,7 @@ public class HttpUtil {
    * @param httpRequest HttpRequestBase
    * @param retryTimeout retry timeout
    * @param authTimeout authenticator timeout
-   * @param socketTimeout curl timeout (in ms)
+   * @param socketTimeout socket timeout (in ms)
    * @param connectTimeout connect timeout (ms)
    * @param retryCount retry count for the request
    * @param injectSocketTimeout injecting socket timeout
@@ -699,7 +699,7 @@ public class HttpUtil {
    * @param httpRequest request object contains all the information
    * @param retryTimeout retry timeout (in seconds)
    * @param authTimeout authenticator specific timeout (in seconds)
-   * @param socketTimeout curl timeout (in ms)
+   * @param socketTimeout socket timeout (in ms)
    * @param connectTimeout connect timeout (ms)
    * @param retryCount retry count for the request
    * @param injectSocketTimeout simulate socket timeout
